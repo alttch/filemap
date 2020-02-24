@@ -1,9 +1,9 @@
-# filemap
+# filemap - processing Kubernetes-style config maps and secrets
 
 ## What's this
 
-**filemap** is a Python module for comfortable processing of Kubernetes config
-maps and secrets, mounted as the volumes.
+**filemap** is a Python module for comfortable processing of Kubernetes-style
+config maps and secrets, mounted as the volumes.
 
 ## Usage
 
