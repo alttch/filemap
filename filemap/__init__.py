@@ -14,11 +14,11 @@ def _serialize_ns(ns):
 
 class FileMap:
 
-    def __init__(self, path=None, allow_empty=False):
-        if path: self.update(path)
+    def __init__(self, path=None, allow_empty=False, raw=False):
+        if path: self.update(path, raw=raw)
         self.allow_empty = allow_empty
 
-    def update(self, path):
+    def update(self, path, raw=False):
         self.data = SimpleNamespace()
         src = Path(path)
         for p in src.glob('*'):
@@ -32,8 +32,10 @@ class FileMap:
                         setattr(d, z, sn)
                         n = sn
                     d = n
-                with open(p) as fh:
-                    setattr(d, ks[-1], fh.read().rstrip())
+                with open(p, 'r' + ('b' if raw else '')) as fh:
+                    value = fh.read()
+                    if not raw: value = value.rstrip()
+                    setattr(d, ks[-1], value)
 
     def serialize(self):
         return _serialize_ns(self.data)
