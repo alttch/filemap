@@ -15,7 +15,7 @@ directory, where files are keys and file contents are values.
 When loaded, inside **FileMap** object, keys are transformed into fields and
 namespaces, field trees are formed with the dots in file names, as:
 
-* somefile => obj.data.somefile
+* somekey => obj.data.somekey
 * some.key => obj.data.some.key
 * some.another.key => obj.data.some.another.key
 
@@ -26,7 +26,7 @@ from filemap import FileMap
 
 config = FileMap('/etc/config')
 
-print(config.data.somefile)
+print(config.data.somekey)
 print(config.data.some.key)
 print(config.data.some.another.key)
 ```
@@ -46,9 +46,9 @@ When serialized, **FileMap** object is transformed into dict:
 
 ```python
 data = config.serialize()
-print(data['somefile'])
-print(data['some']['file'])
-print(data['some']['another']['file'])
+print(data['somekey'])
+print(data['some']['key'])
+print(data['some']['another']['key'])
 ```
 
 ### Combining multiple volumes
