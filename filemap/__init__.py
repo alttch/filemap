@@ -15,16 +15,14 @@ def _serialize_ns(ns):
 
 class FileMap:
 
-    def __init__(self, path=None, allow_empty=False, **kwargs):
+    def __init__(self, path=None, **kwargs):
         """
         Args:
             path: initial import path (optional)
-            allow_empty: return None if no key for get
             other kwargs: passed to initial update as-is
         """
         self.data = SimpleNamespace()
         if path: self.update(path, **kwargs)
-        self.allow_empty = allow_empty
 
     def update(self, path, default_type=str, types={}):
         """
@@ -90,7 +88,14 @@ class FileMap:
     def serialize(self):
         return _serialize_ns(self.data)
 
-    def get(self, key, _ns=None):
+    def get(self, key, default=AttributeError, _ns=None):
+        """
+        Args:
+            key: key name
+            default: default value if key not found
+        Raises:
+            AttributeError: if default value is not specified
+        """
         ns = _ns if _ns else self.data
         try:
             if '.' in key:
@@ -99,5 +104,7 @@ class FileMap:
             else:
                 return getattr(ns, key)
         except AttributeError:
-            if self.allow_empty: return None
-            else: raise
+            if default is not AttributeError:
+                return default
+            else:
+                raise
