@@ -45,7 +45,8 @@ print(config.get('some.another.key'))
 When serialized, **FileMap** object is transformed into dict:
 
 ```python
-data = config.serialize()
+data = config.serialize() # or
+data = dict(config) # does the same
 print(data['somekey'])
 print(data['some']['key'])
 print(data['some']['another']['key'])
@@ -67,15 +68,9 @@ config.update('/etc/secrets')
 If the same keys exist in different volumes, newer keys override the older
 ones.
 
-### Loading binary data
+### Loading binary data, numbers, JSON
 
-When argument *raw=True* is used either in constructor or in *update* function,
-the data is loaded in binary format.
-
-```python
-config = FileMap('/etc/binary-keys', raw=True)
-config.update('/etc/binary-keys2', raw=True)
-```
+Refer to library pydoc for more info
 
 ## Installation
 

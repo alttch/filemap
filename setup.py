@@ -16,7 +16,7 @@ setuptools.setup(
     url='https://github.com/alttch/filemap',
     packages=setuptools.find_packages(),
     license='MIT',
-    install_requires=[],
+    install_requires=['pyyaml', 'pyaltt2'],
     classifiers=('Programming Language :: Python :: 3',
                  'Topic :: Software Development :: Libraries'),
 )
