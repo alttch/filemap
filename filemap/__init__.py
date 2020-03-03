@@ -100,7 +100,7 @@ class FileMap:
         try:
             if '.' in key:
                 ks = key.split('.', 1)
-                return self.get(ks[1], getattr(ns, ks[0]))
+                return self.get(ks[1], default=default, _ns=getattr(ns, ks[0]))
             else:
                 return getattr(ns, key)
         except AttributeError:
