@@ -32,6 +32,15 @@ def test_get():
         assert m.get('somekey4') is None
 
 
+def test_merge():
+    m.update({'some_a': 3, 'some_b': 'zzz'})
+    assert m.get('somekey1') == 'value1'
+    assert m.get('some_a') == 3
+    assert m.data.some_a == 3
+    assert m.get('some_b') == 'zzz'
+    assert m.data.some_b == 'zzz'
+
+
 def test_raw():
     assert FileMap('test_data',
                    default_type='raw').get('somekey1') == b'value1\n'

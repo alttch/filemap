@@ -36,50 +36,59 @@ class FileMap:
                     valid types: 'int', 'float', 'raw', 'json', 'str', 'bool'
                     built-in types can be used w/o quotes, bytes is equal to
                     'raw'
+
+        Note:
+            a function can merge data with an existing dictionary. Just set
+            path=somedict. Note: dict keys MUST be strings and can not contain
+            any special symbols except "_"
         """
-        src = Path(path)
-        if default_type is None:
-            default_type = str
-        if types is None:
-            types = {}
-        for p in src.glob('*'):
-            if not p.name.startswith('.'):
-                d = self.data
-                ks = p.name.split('.')
-                for z in ks[:-1]:
-                    n = getattr(d, z, None)
-                    if not isinstance(n, SimpleNamespace):
-                        sn = SimpleNamespace()
-                        setattr(d, z, sn)
-                        n = sn
-                    d = n
-                ct = types.get(p.name, default_type)
-                if ct == 'str':
-                    ct = str
-                elif ct == 'int':
-                    ct = int
-                elif ct == 'float':
-                    ct = float
-                elif ct == 'float':
-                    ct = float
-                elif ct == 'bool':
-                    ct = bool
-                elif ct in ['raw', 'bytes']:
-                    ct = bytes
-                with open(p, 'r' + ('b' if ct is bytes else '')) as fh:
-                    value = fh.read()
-                    if ct == 'json':
-                        import yaml
-                        value = yaml.load(value)
-                    elif ct is str:
-                        value = value.rstrip()
-                    elif ct is int:
-                        value = int(value)
-                    elif ct is float:
-                        value = float(value)
-                    elif ct is bool:
-                        value = val_to_boolean(value.strip())
-                    setattr(d, ks[-1], value)
+        if isinstance(path, dict):
+            for k, v in path.items():
+                setattr(self.data, k, v)
+        else:
+            src = Path(path)
+            if default_type is None:
+                default_type = str
+            if types is None:
+                types = {}
+            for p in src.glob('*'):
+                if not p.name.startswith('.'):
+                    d = self.data
+                    ks = p.name.split('.')
+                    for z in ks[:-1]:
+                        n = getattr(d, z, None)
+                        if not isinstance(n, SimpleNamespace):
+                            sn = SimpleNamespace()
+                            setattr(d, z, sn)
+                            n = sn
+                        d = n
+                    ct = types.get(p.name, default_type)
+                    if ct == 'str':
+                        ct = str
+                    elif ct == 'int':
+                        ct = int
+                    elif ct == 'float':
+                        ct = float
+                    elif ct == 'float':
+                        ct = float
+                    elif ct == 'bool':
+                        ct = bool
+                    elif ct in ['raw', 'bytes']:
+                        ct = bytes
+                    with open(p, 'r' + ('b' if ct is bytes else '')) as fh:
+                        value = fh.read()
+                        if ct == 'json':
+                            import yaml
+                            value = yaml.load(value)
+                        elif ct is str:
+                            value = value.rstrip()
+                        elif ct is int:
+                            value = int(value)
+                        elif ct is float:
+                            value = float(value)
+                        elif ct is bool:
+                            value = val_to_boolean(value.strip())
+                        setattr(d, ks[-1], value)
 
     def __iter__(self):
         for k, v in self.serialize().items():
