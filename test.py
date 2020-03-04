@@ -27,6 +27,7 @@ def test_get():
     assert m.get('somekey4', 5) == 5
     assert m.get('somekey4', None) is None
     assert m.get('someboolkey') is True
+    assert dict(m)['somekey1'] == 'value1'
     with pytest.raises(AttributeError):
         assert m.get('somekey4') is None
 
